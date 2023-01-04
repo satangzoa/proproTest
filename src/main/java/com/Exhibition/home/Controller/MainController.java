@@ -278,25 +278,20 @@ public class MainController {
 		
 		return "memberModifyOk";
 	}
+
 	
-	
-//	@RequestMapping(value = "/buy")
-//	public String buy() {
-//		
-//		return "buy";
-//	}
-	
-	@RequestMapping(value = "/cart_List")
-	public String cart_List() {
-		
-		return "cart_List";
-	}
 	@RequestMapping(value = "/store")
 	public String store() {
 		
 		return "store";
 	}
-	@RequestMapping (value ="MainStore")
+	
+	@RequestMapping(value = "/cart")
+	public String cart() {
+		
+		return "cart";
+	}
+	@RequestMapping(value = "/MainStore")
 	public String MainStore() {
 		
 		return "MainStore";
@@ -309,6 +304,7 @@ public class MainController {
 		IDao dao = sqlSession.getMapper(IDao.class);		
 		
 		BuyDto buyDto = dao.joinTest("tiger");
+		
 		
 		System.out.println(buyDto.getMemberDto().getMid());
 		
@@ -323,22 +319,54 @@ public class MainController {
 		return "test";
 	}
 	
+//	@RequestMapping(value = "/mypage")
+//	public String memberModify(Model model, HttpSession session) {
+//		
+//		String sessionId = (String) session.getAttribute("memberId");
+//		
+//		IDao dao = sqlSession.getMapper(IDao.class);
+//		
+//		MemberDto memberDto = dao.getMemberInfo(sessionId);
+//		
+//		model.addAttribute("memberDto", memberDto);
+//		
+//		return "memberModify";
+//	}
 	
-	
-	@RequestMapping (value ="star2")
-	public String star2() {
+//	@RequestMapping(value = "questionOk")
+//	public String writeQuestion(HttpServletRequest request, Model model) {
+//		
+//		String qid = request.getParameter("qid");//글쓴유저 아이디
+//		String qname = request.getParameter("qname");//글쓴유저 이름
+//		String qcontent = request.getParameter("qcontent");//글쓴이가 쓴 질문내용
+//		String qemail = request.getParameter("qemail");//이메일
+//		
+//		IDao dao = sqlSession.getMapper(IDao.class);
+//		dao.writeQuestion(qid, qname, qcontent, qemail);
+//		
+//		return "redirect:list";
+//	}
+//
+
+	@RequestMapping (value ="comment")
+	public String review(HttpServletRequest request, Model model) {
 		
-		return "star2";
+		String rid = request.getParameter("rid");
+		String rcontent = request.getParameter("rcontent");
+		String star = request.getParameter("star");
+		String score = request.getParameter("score");
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		dao.writeMent(rid, rcontent, star, 0);
+		
+		model.addAttribute("rid", rid);
+		model.addAttribute("rcontent", rcontent);
+		model.addAttribute("star", star);
+		model.addAttribute("score", score);
+		
+		return "commentMain";
 	}
 	
-	@RequestMapping(value = "/ticket")
-	public String ticket() {
-		
-		return "ticket";
-	}
-	@RequestMapping (value ="cart")
-	public String cart() {
-		
-		return "cart";
-	}
+	
+
 }

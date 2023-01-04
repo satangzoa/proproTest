@@ -3,7 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
 <%
 String[] img ={"j1.png", "j2.png", "j3.png", "j4.png", "j5.png", "j6.png", "j7.png", "j8.png", "j9.png"};
-String[] name = {"베게짱구", "하품짱구", "흰둥이랑짱구", "걷는짱구", "멍멍이짱구", "꿀벌짱구", "다람쥐짱구", "고양이짱구", "토끼짱구"};
+String[] name = {"j1", "j2", "j3", "j4", "j5", "j6", "j7", "j8", "j9"};
 String[] price = {"1000", "1500", "2000", "3,000", "3,500", "4,000", "5,000", "6,000", "7,000"};
 %>
 <!DOCTYPE html>
@@ -67,7 +67,7 @@ function fnView() {
 							//out.println("<input type='button' value='장바구니 담기' onclick='fnCart(\"" + name[i] + "\", \"" + price[i] + "\")' />");
 							//두 줄로 쓰기, 닫는 큰 따옴표와 괄호 옆의 띄어쓰기 필수
 							out.println("<input type='button' value='장바구니 담기' ");
-							out.println("onclick='script:window.location='cart(\"" + name[i] + "\", \"" + price[i] + "\")' />");
+							out.println("onclick='cart(\"" + name[i] + "\", \"" + price[i] + "\")' />");
 						out.println("</td>");
 					out.println("</tr>");
 				out.println("</table>");

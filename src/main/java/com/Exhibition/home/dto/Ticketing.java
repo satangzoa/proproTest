@@ -7,14 +7,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ticketing { //ticket 
+public class Ticketing { //ticketing  예매한 티켓정보
 
-	private int reservNo;//예매번호
-	private String tid; //사용자 아이디
-	private String selectedDate;//선택날짜
-	private String ticketName; //티켓이름
-	private int count;//티켓 매수
-	private String tprice;//티켓가격
-
+	private int tnum;//티켓 번호
+	private String mid; //사용자 아이디
+	private String ticketName;//티켓이름
+	private String rday; //티켓 사용날짜
+	private String price;//티켓 가격
+	private String count;//티켓 장수
 	
+	
+	private MemberDto memberDto;
 }
+

@@ -39,6 +39,9 @@
 	            <li class="nav-item">
 	              <a class="nav-link" href="event">이벤트</a>
 	            </li>
+	               <li class="nav-item">
+	              <a class="nav-link" href="comment">리뷰</a>
+	            </li>
 	            <li class="nav-item">
 	            <% if(sessionId == null) { %>
 	              <a class="nav-link" sec:authorize="isAnonymous()"  href="login">

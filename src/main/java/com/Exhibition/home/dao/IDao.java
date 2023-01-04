@@ -22,16 +22,23 @@ public interface IDao {
 			public void questionModify(String qnum,  String qname, String qcontent, String qemail );// 해당글 번호로 조회하여 질문 수정 UPDATE
 			public void questionDelete(String qnum);//글삭제 DELETE
 			public int boardAllCount();// 게시판 총 글의 개수 가져오기
-			public BuyDto joinTest(String string);//조인테스트
+			//조인테스트
+			public BuyDto joinTest(String mid);//조인테스트
 			
-	//장바구니
+		//예매하기
+				//예매할 티켓 정보가져오기
+			public Ticket tictekInfo(String tnum);
+				
+				//예매
+			public int ticketing(String mid, String ticketName, String rday, String price , String count);
+				
+				//예매한 티켓 정보 가져오기//조인
+			public List<Ticketing> ticketConfirm(String mid);
 			
-			//예매
-			public void BuyTicket(int reservNo, String selectedDate, String ticketName, int count , String tprice);
+			//예매한 티켓 취소하기
+			public void ticketDelete(String tnum);
 			
+			//리뷰쓰기
+			public void writeMent(String rid, String rcontent, String star, int score);
 			
 }
-
-
-
-

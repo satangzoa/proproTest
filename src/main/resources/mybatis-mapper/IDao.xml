@@ -84,19 +84,67 @@
 		WHERE cart.mid=#{id}
 		</select>
 		
-		<!-- 예매 -->
-		<!-- 티켓 예매하기 -->
-	<insert id="BuyTicket">
-		insert into ticket(reservNo, selectedDate,ticketName, count, tprice)
-		VALUES(#{param1}, #{param2}, #{param3},#{param4},#{param5}) 
+		
+	    <!-- 예매 -->
+		
+		<select id="tictekInfo" resultType="com.Exhibition.home.dto.Ticket"> 
+		SELECT * FROM ticket WHERE tnum=#{param1} 
+		</select>
+		
+		<!-- 티켓 예매하기  -->
+		<insert id="ticketing">
+		insert into ticketing(tnum,mid, ticketName, rday, price, count)
+		VALUES(ticketing_SEQ.nextval,#{param1}, #{param2}, #{param3},#{param4},#{param5}) 
 		</insert>
 		
-	<!--	<select id="sumMoney" resultType="int">
-        SELECT NVL(SUM(tprice * count), 0) money
-        FROM ticket     WHERE tid =  #{param1}
-    </select>-->
 		
-	</mapper>
+		<!-- 티켓 예매 확인정보 가져오기-->
+		<resultMap type="com.Exhibition.home.dto.MemberDto" id="memberDto3">
+		<result property="mid" column="mid"/>
+		<!--  column아이디는 테이블 아이디 -->
+		<result property="mpw" column="mpw"/>
+		<result property="mname" column="mname"/>
+		<result property="memail" column="memail"/>	
+		<result property="mdate" column="mdate"/>	
+		</resultMap>
+	
+		<resultMap type="com.Exhibition.home.dto.Ticketing" id="Ticketing2">
+		<result property="mid" column="mid"/>
+		<result property="ticketName" column="ticketName"/>
+		<result property="rday" column="rday"/>	
+		<result property="price" column="price"/>	
+		<result property="count" column="count"/>	
+		<result property="tnum" column="tnum"/>	
+		<collection property="memberDto" resultMap="memberDto3"></collection>
+		</resultMap>
+	
+		<select id="ticketConfirm" parameterType="com.Exhibition.home.dto.Ticketing" resultMap="Ticketing2">
+		
+		SELECT 
+			ticketing.mid, ticketing.ticketName,ticketing.rday,ticketing.price,ticketing.count,ticketing.tnum,
+			emember.mid , emember.mname, emember.memail
+		FROM
+			ticketing
+			JOIN emember
+			ON ticketing.mid = emember.mid
+		WHERE ticketing.mid=#{mid}
+		
+		</select>
+		
+		<!-- 티켓 예매 취소하기  -->
+		<delete id="ticketDelete">
+		DELETE FROM ticketing WHERE tnum=#{param1}
+		</delete>
+		
+		<!-- 리뷰쓰기  -->
+		<insert id="writeMent">
+		INSERT INTO ment(rnum, rid, rcontent, star, score) VALUES(ment_SEQ.nextval,#{param1}, #{param2}, #{param3}, #{param4})
+	</insert>
+		</mapper>
+	
+	
+	
+	
 	
 	
 	

@@ -67,7 +67,7 @@ function fnView() {
 							//out.println("<input type='button' value='장바구니 담기' onclick='fnCart(\"" + name[i] + "\", \"" + price[i] + "\")' />");
 							//두 줄로 쓰기, 닫는 큰 따옴표와 괄호 옆의 띄어쓰기 필수
 							out.println("<input type='button' value='장바구니 담기' ");
-							out.println("onclick='script:window.location='cart(\"" + name[i] + "\", \"" + price[i] + "\")' />");
+							out.println("onclick='cart(\"" + name[i] + "\", \"" + price[i] + "\")' />");
 						out.println("</td>");
 					out.println("</tr>");
 				out.println("</table>");

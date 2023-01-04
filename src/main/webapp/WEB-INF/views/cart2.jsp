@@ -8,7 +8,7 @@
 	<title>상품장바구니 목록</title>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
 	<link rel="stylesheet" href="/resources/css/10-11.css" />
-	<script type="text/javascript" src="resources/js/10-11.js"></script>  
+	<script type="text/javascript" src="resources/css/10-11.js"></script>  
 </head>
 <body>
 
