@@ -7,9 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment {//ment
-
+public class Ment2 { //ment2
 	private int rnum;//리뷰번호
+	private String rating;//별점
 	private String rid;//리뷰쓴사람아이디
 	private String rcontent;//리뷰내용
+	
+	
 }

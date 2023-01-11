@@ -73,7 +73,8 @@
 <body>
 <%@ include file="inc/header.jsp" %>
    <center>
-   <form action ="ticketingtest?num=${param.num}" method="post"> 
+   <form action ="ticketingOk?num=${param.num}" method="post"> 
+   <input type="hidden" value="${ticket.tnum }" name="tnum">
    <table width="75%" border="0" cellspacing="0" cellpadding="20">
       <tr>
          <td class="titlebox">
@@ -105,7 +106,7 @@
                                  </td>
                                   <tr>
                               <td><span class="content_text01">가격:</span></td>
-                              <td><input class="input_type01" type="text" name="price" value="${ticket.tprice}">
+                              <td><input class="input_type01" type="text" name="price" value="${ticket.price}">
                          <select name="count">
                                        <!-- <option value="">${i}</option>-->
                                         <option value="1">1</option>
@@ -121,8 +122,7 @@
 
                                  <!-- <input class="button_type01" type="button" value="예매하기"  onclick="location.href='ticketingtest'">&nbsp;&nbsp; -->
                                  <input class="button_type01" type="submit" value="예매하기"  >&nbsp;&nbsp; 
-                                 <input class="button_type01" type="submit" value="예매취소" onclick="script:window.location='index'">
-                                 <input class="button_type01" type="submit"  value="뒤로" onclick="history.go(-1); ">
+                                 <input class="button_type01" type="button" value="예매취소" onclick="script:window.location='index'">
                               </td>
                            </tr>
                         </form>

@@ -8,6 +8,17 @@
 <body>
 <div id="wrapper" >	
 	<%@ include file="inc/header.jsp" %>
+	<center>
+		   	<div id="total_search">
+          <form action="search_list">
+          <div id="search">
+            <div id="search_select">
+            </div>
+            <div id="search_input"><input type="text" name="searchKey" placeholder="공연검색하기"></div>
+						</div>
+          </form>
+        </div> 
+        </center>	
 	
    	<!-- tab 메뉴-->
    	<div>

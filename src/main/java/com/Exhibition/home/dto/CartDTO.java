@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Comment {//ment
-
-	private int rnum;//리뷰번호
-	private String rid;//리뷰쓴사람아이디
-	private String rcontent;//리뷰내용
+public class CartDTO {
+	private String name;	//상품명
+	private int price;		//가격
+	private int cnt;		//수량
+	
 }

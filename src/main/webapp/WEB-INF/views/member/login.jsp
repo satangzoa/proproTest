@@ -7,7 +7,7 @@
 <title>로그인</title>
 </head>
 <body>
-	<%@ include file="inc/header.jsp" %>
+	<%@ include file="../inc/header.jsp" %>
 		<div id="wrapper">
 			<h5>회원 로그인</h5>
 			<form action="loginOk" method="post">
@@ -22,6 +22,6 @@
 				<input type="submit" value="로그인" class="btn btn-primary my-2">
 			</form>	
 		</div>
-	  <%@ include file="inc/footer.jsp" %>		
+	  <%@ include file="../inc/footer.jsp" %>		
 </body>
 </html>

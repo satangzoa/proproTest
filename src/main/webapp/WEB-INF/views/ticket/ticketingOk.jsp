@@ -68,7 +68,7 @@
 										
 								<h2>전시회 예매가 완료 되었습니다.</h2>
 											</tr>
-									<input type="hidden" name = "userId" value="${mid} }">
+									<input type="hidden" name = "id" value="${mid} }">
 									<input type="hidden" name = "ticketName" value="${ticketName}">
 									<input type="hidden" name = "selectedDate" value="${selectedDate}">
 												<input type="hidden" name = "ticketName" value="${count}">

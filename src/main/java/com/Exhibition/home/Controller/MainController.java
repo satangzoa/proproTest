@@ -71,7 +71,7 @@ public class MainController {
 	@RequestMapping (value ="login")
 	public String login () {
 		
-		return "login";
+		return "member/login";
 	}
 	
 	@RequestMapping (value = "logout")
@@ -108,7 +108,7 @@ public class MainController {
 			model.addAttribute("mid",mid);
 		}
 
-		return "loginOk";
+		return "member/loginOk";
 	}
 	
 //	@RequestMapping (value ="show")
@@ -332,41 +332,86 @@ public class MainController {
 //		
 //		return "memberModify";
 //	}
-	
-//	@RequestMapping(value = "questionOk")
-//	public String writeQuestion(HttpServletRequest request, Model model) {
-//		
-//		String qid = request.getParameter("qid");//글쓴유저 아이디
-//		String qname = request.getParameter("qname");//글쓴유저 이름
-//		String qcontent = request.getParameter("qcontent");//글쓴이가 쓴 질문내용
-//		String qemail = request.getParameter("qemail");//이메일
-//		
-//		IDao dao = sqlSession.getMapper(IDao.class);
-//		dao.writeQuestion(qid, qname, qcontent, qemail);
-//		
-//		return "redirect:list";
-//	}
-//
 
 	@RequestMapping (value ="comment")
-	public String review(HttpServletRequest request, Model model) {
+	public String comment() {
+		
+		
+		return "comment";
+	}
+	
+
+	@RequestMapping (value ="comment2")
+	public String comment2(HttpServletRequest request, Model model) {
 		
 		String rid = request.getParameter("rid");
 		String rcontent = request.getParameter("rcontent");
-		String star = request.getParameter("star");
-		String score = request.getParameter("score");
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
-		dao.writeMent(rid, rcontent, star, 0);
 		
-		model.addAttribute("rid", rid);
-		model.addAttribute("rcontent", rcontent);
-		model.addAttribute("star", star);
-		model.addAttribute("score", score);
-		
-		return "commentMain";
+		dao.writeComment(rid, rcontent);
+		return "comment2";
 	}
 	
+	@RequestMapping (value ="Han")
+	public String Han() {
+		
+		return "Han";
+	}
 	
+	@RequestMapping (value ="Han2")
+	public String Han2(HttpServletRequest request, Model model) {
+		
+		String rating = request.getParameter("rating");
+		String rid = request.getParameter("rid");
+		String rcontent = request.getParameter("rcontent");
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		dao.writeMent(rating,rid,rcontent);
+		
+		return "Han2";
+	}
+	
+//	@RequestMapping (value ="Han3")
+//	public String Han3(Model model) {
+//		
+//		IDao dao = sqlSession.getMapper(IDao.class);
+//		
+//		Ment2 ment2 = dao.getReview("1");
+//		model.addAttribute("ment2", ment2);
+//		model.addAttribute("rating",Integer.parseInt(ment2.getRating()));
+//		
+//		return "Han3";
+//	}
+	
+	
+	@RequestMapping (value ="review")
+	public String review() {
+		
+		return "review";
+	}
+	
+//	@RequestMapping (value ="review2")
+//	public String review2(HttpServletRequest request, Model model) {
+//		
+//		String rating = request.getParameter("rating");
+//		String rid = request.getParameter("rid");
+//		String rcontent = request.getParameter("rcontent");
+//		
+//		IDao dao = sqlSession.getMapper(IDao.class);
+//		
+//		dao.writeMent(rating,rid,rcontent);
+//		
+//		return "review2";
+//	}
+	
+//	@RequestMapping (value ="review3")
+//	public String Han3(Model model) {
+//		
+//	
+//		
+//		return "review3";
+//	}
 
 }

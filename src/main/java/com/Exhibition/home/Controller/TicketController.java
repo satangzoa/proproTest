@@ -105,7 +105,7 @@ public class TicketController {
 		
 		List<Ticketing> ticketConfirmList =dao.ticketConfirm(mid);
 		
-		System.out.println(ticketConfirmList.get(0).getTnum());
+		//System.out.println(ticketConfirmList.get(0).getTnum()); 잘 찾아오는지 확인하는것
 		
 		model.addAttribute("ticketConfirm", ticketConfirmList);
 		

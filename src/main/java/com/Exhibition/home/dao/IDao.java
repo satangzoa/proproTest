@@ -37,8 +37,22 @@ public interface IDao {
 			
 			//예매한 티켓 취소하기
 			public void ticketDelete(String tnum);
+		
+		//리뷰
+			//한 마디 적고가
+			public int writeComment(String rid, String rcontent);
 			
-			//리뷰쓰기
-			public void writeMent(String rid, String rcontent, String star, int score);
+			//별점 달쟈
+			public int writeMent(String rating,String rid, String rcontent);
+			
+			//리뷰 가져오기
+			//public Ment2 getReview(String rnum);
+			
+			//게시판 검색 관련
+//			public ArrayList<RFBoardDto> rfbSearchTitleList(String searchKey);
+//			public ArrayList<RFBoardDto> rfbSearchContentList(String searchKey);
+//			public ArrayList<RFBoardDto> rfbSearchWriterList(String searchKey);
+			
+			
 			
 }

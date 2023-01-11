@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<%@ include file="inc/header.jsp" %>
+	<%@ include file="../inc/header.jsp" %>
 	<table width="80%" border="0" cellspacing="0" cellpadding="10">
 					<tr class="contentbox">
 						<td class="content">
@@ -37,6 +37,6 @@
 						</td>
 					</tr>
 				</table>
-<%@ include file="inc/footer.jsp" %>				
+<%@ include file="../inc/footer.jsp" %>				
 </body>
 </html>
