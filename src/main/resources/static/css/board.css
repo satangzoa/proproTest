@@ -1,30 +1,28 @@
 @charset "UTF-8";
 
-th.board_title {
-	background-color: #70AF85;
-	border: 1px solid #E5D9B6;
-	font-size: 20px;
-	color: #ffffff;
-	font-family: malgun;
-	font-weight: bold;
-	
-}
+.boardWrap{margin-top:50px!important}
+.boardWrap .board_title{border-bottom: 2px solid #212529}
+.boardWrap h4{font-size:24px; margin-bottom:5px;font-weight: 700;}
+.boardWrap .star{margin-bottom:4px}
+.boardWrap .show_detail{clear:both; display:block;margin-top: 50px;overflow: auto;}
+.boardWrap .show_detail .show_poster{ float:left}
+.boardWrap .show_detail .show_poster .likes li{float:left;margin-right:10px;}
+.boardWrap .show_detail .pright-area{float:left; margin:0 0 0 80px;}
+.boardWrap .show_detail .pright-area.boardWrap .show_detail .pright-area .show_text{}
+.boardWrap .show_detail .pright-area.boardWrap .show_detail .pright-area .show_text li > .tilte{}
+.boardWrap .show_detail .pright-area.boardWrap .show_detail .pright-area .show_text li input.stdate{float:left!important; width:70px}
+.boardWrap .show_detail .pright-area .show_text{margin-bottom:10px}
+.boardWrap .show_detail .pright-area .show_text li{line-height:35px }
 
-td.board_content01 {
-	background-color: #C6EBC9;
-	border: 1px solid #C69749;
-	font-size: 20px;
-	color: #808080;
-	font-family: malgun;
-	font-weight: bold;
-	text-align:center;
-}
 
-td.board_content02 {
-	background-color: #C6EBC9;
-	border: 1px solid #C69749;
-	font-size: 20px;
-	color: #808080;
-	font-family: malgun;
-	text-align:left;
-}
+/*showlist*/
+#search{float:right;width: 400px;  }
+#search .search_select{width: 120px;float:left;margin-right:4px}
+#search .search_input{float:left;width:270px;margin-right:4px}
+#search .search_input{}
+.input-search , .btn-search{float:left}
+#search .search_btn{float:left}	
+/*showview*/
+.ptselect_txt{width:100%;font-size:12px; color:#ff6600}
+
+.like{margin-top:5px}

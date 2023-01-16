@@ -21,16 +21,17 @@ public class ReviewController {
 	
 	@Autowired
 	private SqlSession sqlSession;
+private String liker;
 	
-	@RequestMapping (value ="reviewLike")
-	public String reviewLike() {
 	
-		return "reviewLike";
+	@RequestMapping("review")
+	public String review( ) {
+		return "review/review";
 	}
-
 	
-	@RequestMapping (value ="reviewLike2")//리뷰보내고 별점 가져온다
-	public String reviewLike2(HttpServletRequest request, Model model) {
+
+	@RequestMapping (value ="reviewOk")
+	public String reviewOk(HttpServletRequest request, Model model) {
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
 		
@@ -38,42 +39,42 @@ public class ReviewController {
 		String rid = request.getParameter("rid");
 		String rcontent = request.getParameter("rcontent");
 
-	dao.rivewLike(rating, rid, rcontent);
-		return "redirect:reviewList2";
+		dao.rivewStar(rating, rid, rcontent);
+		return "redirect:reviewList";
 	}
 	
-	@RequestMapping (value ="reviewList2")
+	@RequestMapping (value ="reviewList")
 	public String reviewOk2(Model model) {
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
-		List<ReviewLike> rList = dao.reviewList2();
+		List<ReviewStar> rList = dao.reviewList();
 		
 		model.addAttribute("rList", rList);
-		return "reviewLike2";
+		return "review/reviewOk";
 	}
 	
 
-	@RequestMapping(value = "commentlike")//좋아요 확인하기
-		public String commentlike(HttpServletRequest request, HttpSession session) {
+	
+
+	@RequestMapping (value ="reviewlikeStar")
+	public String showview (HttpServletRequest request, Model model, HttpSession session) {
+		
+		String sessionId = (String) session.getAttribute("memberId");
+		String snum = request.getParameter("snum");
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
-		String mid = (String) session.getAttribute("memberId");
-		int lnum=Integer.parseInt(request.getParameter("lnum"));
-		int mnum = Integer.parseInt(request.getParameter("mnum")); 
+
+		FileDto fileDto = dao.getFileInfo(snum);
+		ShowDto showdto = dao.showView(snum);
 		
-		int checkCount = dao.likementCheck(mid, mnum);
-	
-	
-		if(checkCount != 0) {
-			return String.format("redirerct:reviewLike?mnum=%s",mnum);
+		dao.rivewLikeHit(snum);
 		
-		}else {
-			
-			dao.likement(mnum, mid);
-			
-		}
-		return String.format("redirerct:reviewLike2?mnum=%s",mnum);
+		model.addAttribute("showView",showdto);
+		model.addAttribute("fileDto", fileDto);
+		
+		return "showView/showview";
 	}
+	
 	
 	
 }

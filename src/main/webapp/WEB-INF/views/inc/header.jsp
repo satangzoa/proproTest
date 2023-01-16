@@ -6,23 +6,182 @@
 <html>
 <head>
 <meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
-	<link href="${pageContext.request.contextPath}/resources/css/layout.css" rel="stylesheet" >
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
+<link href="${pageContext.request.contextPath}/resources/css/layout.css" rel="stylesheet" >
+<link href="${pageContext.request.contextPath}/resources/css/font.css" rel="stylesheet" >
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
 	<!--     Fonts and icons     -->
-	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-	<title>sEEvisit</title>
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.css" integrity="sha512-yHknP1/AwR+yx26cB1y0cjvQUMvEa2PFzt1c9LlS4pRQ5NOTZFWbhBig+X9G9eYW/8m0/4OXNx8pxJ6z57x0dw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.min.css" integrity="sha512-17EgCFERpgZKcm0j0fEq1YCJuyAWdz9KUtv1EjVuaOz8pDnh/0nZxmU6BBXwaaxqoi9PQXnRWqlcDB027hgv9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<!--    모달위해 새로 추가     -->
+<link rel="stylesheet"  href="resources/css/app.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.min.js" integrity="sha512-XtmMtDEcNz2j7ekrtHvOVR4iwwaD6o/FUJe6+Zq+HgcCsk3kj4uSQQR8weQ2QVj1o0Pk6PwYLohm206ZzNfubg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="/resources/js/app.js"></script>
+<title>sEEvisit</title>
 </head>
 <body>
+				<!-- Modal -->
+				<div class="modal fade" id="ourModal" data-bs-backdrop="static" tabindex="-1" aria-labelledby="ourModalLabel" aria-hidden="true">
+				  <div class="modal-dialog modal-dialog-centered modal-lg">
+				    <div class="modal-content">
+				      <div class="modal-header">
+				        <h1 class="modal-title fs-5" id="ourModalLabel">Contact us</h1>
+				        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				      </div>
+				      <div class="modal-body">
+				       	<form action="">
+				       		<div class="mb-3">
+				       			<label for="yourName" class="form-label">Your Name</label>
+				       			<input type="text" id="yourName" class="form-control" placeholder="Your name">
+				       		</div>
+				       		<div class="row">
+				       			<div class="col-md-6 mb-3">
+				       				<label for="yourPhone" class="form-label">Your Phone</label>
+				       				<input type="tel"  id="yourPhone" class="form-control" placeholder="010-1234-5678">
+				       			</div>
+				       			<div class="col-md-6 mb-3">
+				       				<label for="yourEmail" class="form-label">Email Adress</label>
+				       				<input type="email"  id="yourEmail" class="form-control" placeholder="you@email.com">
+				       			</div>
+				       		</div>
+				       			<div class="mb-3">
+				       				<label for="yourTextarea" class="form-label">Write what you want</label>
+				       				<textarea rows="3" cols="30" name="" id="yourTextarea" class="form-control" placeholder="Write what you want"></textarea>
+				       			</div>
+				       			<div class="form-check mb-3">
+				       				<input type="checkbox" id="yourFormCheck" class="form-check-input">
+				       				<label for="yourFormCheck" class="form-check-label">
+				       					I agree to provide privacy.
+				       				</label>
+				       			</div>
+				       			<button class="btn btn-secondary" type="submit">Send!</button>
+				       	</form>
+				       
+				      </div>
+				    </div>
+				  </div>
+				</div>
 	<% 
 		String sessionId = (String) session.getAttribute("memberId");
 		//로그인중이라면 로그인한 아이디가 저장되고 비로그인 중이면 sessionId==null 임
 	%>
+	<nav>
+		<div class="top-menu">
+	         <div class="basic_lo">
+	            <!-- 로그인전 -->
+	            <% if(sessionId == null) { %>
+	           
+	                <a href="login" title="로그인">로그인</a>
+	                <a href="join" title="회원가입">회원가입</a>
+	           
+				<% } else { %> 
+	            <!-- 로그인후 -->
+		       
+		            <a href="logout" title="로그아웃">로그아웃</a>
+		            <a href="mypage" title="마이페이지">마이페이지</a>
+	                <a href="ticketConfirm" title="예매확인/취소">예매확인/취소</a>
+	                <a onclick="location.href='showlist'" title="전시올리기">전시업로드</a>
+	           
+	           
+	           <% } %> 
+	        
+	          		<a href="/support" title="고객센터">고객센터</a>
+	       </div>
+	    </div>
+	    <div class="middle-menu">
+	    	<div class="basic_lo">
+			    <a href="/">enjoysEE</a>
+			    	<ul>
+			    		<li><a href="showlist">예매</a></li>
+			    		<li><a href="event">이벤트</a></li>
+			    		<li><a href="showview2">팝업창</a></li>
+			    		<li><a href="showview4">이미지들</a></li>
+			    		<li><a href="showview6">이미지회전</a></li>
+			    		<li><a href="review">리뷰</a></li>
+			    		<li><a href="testda">testda</a></li>
+			    		<li><a href="dasi">dasi</a></li>
+			    		<li><a href="showlist_adm">파일업로드</a></li>
+			    		<li><a href="showview7">쇼뷰7</a></li>
+			    		<li class="nav-item">
+			              <a class="nav-link" href="boardList">공연검색</a>
+			            </li>
+			         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ourModal">
+							 고객센터
+							</button>
+			    		<li><a href="void(0);" onclick="alert('준비중입니다.');return false;">혜택/할인</a></li>
+
+			    	</ul>
+		    </div>
+		   <!--  <div>
+		    	<li><i class="material-icons">calendar_month</i></li>
+		    </div> -->
+	    </div>
+   </nav> 
+    <div class="middle-area" style="display:none">
+	    <div class="link-area">
+	        <a href="#layer_sitemap" class="header-open-layer btn-layer-sitemap" title="사이트맵">사이트맵</a>
+	        <a href="#layer_header_search" class="header-open-layer btn-layer-search" title="검색">검색</a>
+	        <a href="/booking/timetable" class="link-ticket" title="상영시간표">상영시간표</a>
+	        <a href="#layer_mymega" class="header-open-layer btn-layer-mymega" title="나의 메가박스">나의 메가박스</a>
+	    </div>
+           <li class=""><a href="/movie" class="gnb-txt-movie" title="영화">영화</a>
+                <div class="gnb-depth2">
+                    <ul>
+                        <li><a href="/movie" title="전체영화">전체영화</a></li>
+
+
+                        <li><a href="/curation/specialcontent" title="큐레이션">큐레이션</a></li>
+                        
+                        <li id="festivalArea" style="display: none;"><a href="/festival" title="영화제">영화제</a></li>
+                        <li><a href="/moviepost/all" title="무비포스트">무비포스트</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="/booking" class="gnb-txt-reserve" title="예매">예매</a>
+                <div class="gnb-depth2">
+                    <ul>
+                        <li><a href="/booking" title="빠른예매">빠른예매</a></li>
+                        <li><a href="/booking/timetable" title="상영시간표">상영시간표</a></li>
+                        <li><a href="/booking/privatebooking" title="더 부티크 프라이빗 예매">더 부티크 프라이빗 예매</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="/theater/list" class="gnb-txt-theater" title="극장">극장</a>
+                <div class="gnb-depth2">
+                    <ul>
+                        <li><a href="/theater/list" title="전체극장">전체극장</a></li>
+                        <li><a href="/specialtheater/list" title="특별관">특별관</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="javascript:void(0)" onclick="NetfunnelChk.aTag('EVENT_LIST','/event');return false;" class="gnb-txt-event" title="이벤트">이벤트</a>
+                <div class="gnb-depth2">
+                    <ul>
+                        <li><a href="javascript:void(0)" onclick="NetfunnelChk.aTag('EVENT_LIST','/event');return false;" title="진행중 이벤트">진행중 이벤트</a></li>
+                        <li><a href="javascript:void(0)" onclick="NetfunnelChk.aTag('EVENT_LIST','/event/end');return false;" title="지난 이벤트">지난 이벤트</a></li>
+                        <li><a href="javascript:void(0)" onclick="NetfunnelChk.aTag('EVENT_LIST','/event/winner/list');return false;" title="당첨자발표">당첨자발표</a></li>
+                    </ul>
+                </div>
+            </li>
+            <li><a href="javascript:void(0)" onclick="NetfunnelChk.aTag('STORE_LIST','/store');return false;" class="gnb-txt-store" title="스토어">스토어</a></li>
+            <li><a href="/benefit/membership" class="gnb-txt-benefit" title="혜택">혜택</a>
+                <div class="gnb-depth2">
+                    <ul>
+                        <li><a href="/benefit/membership" title=" 멤버십">멤버십</a></li>
+                        <li><a href="/benefit/discount/guide" title="제휴/할인">제휴/할인</a></li>
+                    </ul>
+                </div>
+            </li>
+        </ul>
+    </div>
+    
 	
-	<nav class="navbar navbar-expand-lg bg-light">
+	<nav class="navbar navbar-expand-lg bg-light" style="display:none">
 	      <div class="container-fluid">
 	        <a class="navbar-brand" href="/">Seevisit</a>
 	        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,28 +190,13 @@
 	        <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
 	          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
 	            <li class="nav-item">
-	              <a class="nav-link active" aria-current="page" href="ticket">예매</a>
+	              <a class="nav-link active" aria-current="page" href="#">예매</a>
 	            </li>
 	            <li class="nav-item">
-	              <a class="nav-link" href="store">스토어</a>
-	            </li>
-	             <li class="nav-item">
-	              <a class="nav-link" href="reviewLike">좋아요</a>
+	              <a class="nav-link" href="#">스토어</a>
 	            </li>
 	            <li class="nav-item">
 	              <a class="nav-link" href="event">이벤트</a>
-	            </li>
-	               <li class="nav-item">
-	              <a class="nav-link" href="review">리뷰</a>
-	            </li>
-	            <li class="nav-item">
-	              <a class="nav-link" href="comment">한 마디 적고가</a>
-	            </li>
-	             <li class="nav-item">
-	              <a class="nav-link" href="Han">한줄</a>
-	            </li>
-	            <li class="nav-item">
-	              <a class="nav-link" href="ShopMallMain">쇼핑몰</a>
 	            </li>
 	            <li class="nav-item">
 	            <% if(sessionId == null) { %>
@@ -69,7 +213,7 @@
           		</li>
           		<% } else { %> 
           		<li class="nav-item">
-             		<a class="nav-link" sec:authorize="isAnonymous()"  href="ticketConfirm">예매확인/취소</a>
+             		<a class="nav-link" sec:authorize="isAnonymous()"  href="mypage">예매확인/취소</a>
           		</li>
           		<li class="nav-item">
              		<a class="nav-link" sec:authorize="isAnonymous()"  href="mypage">마이페이지</a>

@@ -1,18 +1,25 @@
 package com.Exhibition.home.Controller;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DaoSupport;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.Exhibition.home.dao.IDao;
 import com.Exhibition.home.dto.*;
@@ -23,22 +30,32 @@ public class MainController {
 	@Autowired
 	private SqlSession sqlSession;
 	
-	@RequestMapping (value ="/")
+	@RequestMapping (value ="/") 
 	public String home () {
 		
-		return "index";
+		return "redirect:index";
 	}
 
-	@RequestMapping(value = "/index")
-	public String index1() {
-		
-		return "index";
-	}
-	
-	@RequestMapping (value ="join")
+	 @RequestMapping (value ="index") //인덱스 메인페이지
+	   public String home (Model model,HttpServletRequest request,HttpSession session, HttpServletResponse response) throws IOException {
+
+	      IDao dao = sqlSession.getMapper(IDao.class);
+	      List<ShowDto> showboardDtos = dao.showList2();
+
+	      List<EventBDto> eventboardDtos = dao.eventList();
+
+
+
+	      model.addAttribute("showList",showboardDtos);
+          model.addAttribute("eventList",eventboardDtos);
+
+	      return "index";
+	   }
+
+	@RequestMapping (value ="join") //회원가입페이지
 	public String join () {
 		
-		return "join_form";
+		return "join/join_form";
 	}
 	
 	@RequestMapping (value ="joinOk")
@@ -60,21 +77,21 @@ public class MainController {
 			model.addAttribute("mid", mid);
 			model.addAttribute("mname",mname );
 			
-			return "joinOk";
+			return "join/joinOk";
 		} else { //회원가입 실패
-				return "joinFail";
+				return "join/joinFail";
 		}
 	
 	}
 	
 	
-	@RequestMapping (value ="login")
+	@RequestMapping (value ="login") //로그인페이지
 	public String login () {
 		
-		return "member/login";
+		return "login/login";
 	}
 	
-	@RequestMapping (value = "logout")
+	@RequestMapping (value = "logout") //로그아웃페
 	public String logout(HttpSession session) {
 		
 		session.invalidate();
@@ -83,7 +100,7 @@ public class MainController {
 	}
 	
 	
-	@RequestMapping (value = "loginOk")
+	@RequestMapping (value = "loginOk") 
 	public String loginOk(HttpServletRequest request, Model model, HttpSession session) {
 		
 		String mid = request.getParameter("mid");
@@ -108,58 +125,203 @@ public class MainController {
 			model.addAttribute("mid",mid);
 		}
 
-		return "member/loginOk";
+		return "login/loginOk";
 	}
 	
-//	@RequestMapping (value ="show")
-//	public String show () {
-//		
-//		return "/reservation/showview";
-//	}
-//	
-//	
+	@RequestMapping(value = "/mypage")
+	public String memberModify(Model model, HttpSession session) {
+		
+		String sessionId = (String) session.getAttribute("memberId");
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		MemberDto memberDto = dao.getMemberInfo(sessionId);
+		
+		model.addAttribute("memberDto", memberDto);
+		
+		return "member/memberModify";
+	}
 	
-	@RequestMapping(value = "/question")
+	@RequestMapping(value = "/memberModifyOk")
+	public String memberModifyOk(HttpServletRequest request,  Model model) {
+		
+		String mid = request.getParameter("mid");
+		String mpw = request.getParameter("mpw");
+		String mname = request.getParameter("mname");
+		String memail = request.getParameter("memail");
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		dao.memberModify(mid, mpw, mname, memail);
+		
+		MemberDto memberDto = dao.getMemberInfo(mid);//수정된 회원정보 다시 가져오기
+		
+		model.addAttribute("memberDto", memberDto);
+		
+		return "/member/memberModifyOk";
+	}
+	
+	@RequestMapping (value ="showlist_adm") //관리자등록 show
+	public String showlist (Model model) {
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		List<ShowDto> showboardDtos = dao.showList();
+		
+	//	int boardCount = dao.rfboardAllCount();
+		
+		model.addAttribute("showList",showboardDtos);
+	//	model.addAttribute("boardCount",boardCount);
+		
+		
+		return "reservation/showlist_adm";
+	}
+	
+	@RequestMapping (value ="showlist")  //사용자용 showlist
+	public String showlist_customer (Model model) {
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		List<ShowDto> showboardDtos = dao.showList2();
+		
+	//	int boardCount = dao.rfboardAllCount();
+		
+		model.addAttribute("showList",showboardDtos);
+	//	model.addAttribute("boardCount",boardCount);
+		
+		
+		return "reservation/showlist";
+	}
+	
+	
+	
+	
+	@RequestMapping (value ="showwrite")
+	public String showwrite (HttpSession session, HttpServletResponse response) {
+		String sessionId = (String) session.getAttribute("memberId");
+		if(sessionId == null) {//참이면 로그인이 안된 상태
+			PrintWriter out;
+			try {
+				response.setContentType("text/html;charset=utf-8");
+				out = response.getWriter();
+				out.println("<script>alert('로그인하지 않으면 글을 쓰실수 없습니다!');history.go(-1);</script>");
+				out.flush();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}		
+		return "/reservation/showwrite";
+	}
+	
+	@RequestMapping(value = "writeOk")
+	public String writeOk(HttpServletRequest request, HttpSession session, @RequestPart MultipartFile files) throws IllegalStateException, IOException {
+		
+		String showTitle = request.getParameter("stitle");
+		String showLocation = request.getParameter("slocation");
+		String showSdday = request.getParameter("sdday");
+		String showTime = request.getParameter("stime");
+		String showAge = request.getParameter("sage");
+		String showPrice = request.getParameter("sprice");
+		String sessionId = (String) session.getAttribute("memberId");
+		String showKind = request.getParameter("skind");
+		//글쓴이의 아이디는 현재 로그인된 유저의 아이디이므로 세션에서 가져와서 전달 
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		if(files.isEmpty()) { // 파일의 첨부여부 확인
+			dao.showWrite(showTitle, showLocation, showSdday,showTime,showAge,showPrice, sessionId, 0,showKind);
+		} else {
+			dao.showWrite(showTitle, showLocation, showSdday,showTime,showAge,showPrice, sessionId, 1,showKind);
+			ArrayList<ShowDto> latestBoard = dao.boardLatestInfo(sessionId);
+			ShowDto dto = latestBoard.get(0);
+			int snum = dto.getSnum();
+			//파일첨부
+			String fileoriname = files.getOriginalFilename();//첨부된 파일의 원래 이름
+			String fileextension = FilenameUtils.getExtension(fileoriname).toLowerCase();
+			//첨부된 파일의 확장자 추출 후 소문자로 강제 변경
+			File destinationFile;//java.io 패키지 제공 클래스 임포트
+			String destinationFileName;//실제 서버에 저장된 파일의 변경된 이름이 저장될 변수 선언
+			
+			String fileurl = "C:/Users/ici/git/ExhibitoinPJ/src/main/resources/static/uploadfiles/";
+			//첨부된 파일이 저장될 서버의 실제 폴더 경로 //String fileurl = "C:/springBootWork/Exhibition/src/main/resources/static/uploadfiles";
+			//C:/Users/napmkmk/git/ExhibitoinPJ/src/main/resources/static/uploadfiles
+			//C:/springBootWork/Exhibition/src/main/resources/static/uploadfiles
+			do {
+				destinationFileName = RandomStringUtils.randomAlphanumeric(32) + "." + fileextension;
+				//알파벳대소문자와 숫자를 포함한 랜덤 32자 문자열 생성 후 .을 구분자로 원본 파일의 확장자를 연결->실제 서버에 저장될 파일의 이름
+				destinationFile = new File(fileurl+destinationFileName);	
+			} while(destinationFile.exists());
+			//혹시 같은 이름의 파일이름이 존재하는지 확인
+			
+			destinationFile.getParentFile().mkdir();
+			files.transferTo(destinationFile);//업로드된 파일이 지정한 폴더로 이동 완료!
+			
+			dao.fileInfoInsert(snum, fileoriname, destinationFileName, fileextension, fileurl);		
+			
+		}
+		
+		return "redirect:showlist";
+	}
+	
+	
+	@RequestMapping(value = "file_down")
+	public String file_down(HttpServletRequest request, Model model, HttpServletResponse response) {
+		
+		String snum = request.getParameter("snum");//파일이 첨부된 원글 번호
+		
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		FileDto fileDto = dao.getFileInfo(snum);
+		
+		String filename = fileDto.getFilename();
+		
+		PrintWriter out;
+		try {
+			response.setContentType("text/html;charset=utf-8");
+			out = response.getWriter();
+			out.println("<script>window.location.href='/resources/uploadfiles/" + filename + "'</script>");
+			out.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "redirect:/reservation/showlist";
+	}
+	
+	//////////////////////////////이벤트게시판영역///////////////////////////////////
+	
+	@RequestMapping(value = "/eventwrite")
 	public String question(HttpSession session, Model model) {
 			
 		String sessionId = (String) session.getAttribute("memberId");
 		
-//		if(sessionId == null) {
-//			model.addAttribute("memberId", "GUEST");
-//		} else {
-//			model.addAttribute("memberId", sessionId);
-//		}
+		if(sessionId == null) {//로그인 상태 확인
+			model.addAttribute("memberId", "ADMIN");
+		} else {
+			model.addAttribute("memberId", sessionId);
+		}
+		
 		model.addAttribute("memberId", sessionId);
-		return "question";
+		return "event/question";
 	}
 	
-	
-	
-	
-	@RequestMapping(value = "questionOk")
-	public String writeQuestion(HttpServletRequest request, Model model) {
+	@RequestMapping(value = "/questionOk")
+	public String questionOk(HttpServletRequest request) {
 		
-		String qid = request.getParameter("qid");
-		String qname = request.getParameter("qname");
-		String qcontent = request.getParameter("qcontent");
-		String qemail = request.getParameter("qemail");
+		String qid = request.getParameter("qid");//글쓴유저 아이디
+		String qname = request.getParameter("qname");//글쓴 질문 내용
+		String qcontent = request.getParameter("qcontent");//글쓴 질문 내용
+		String qemail = request.getParameter("qemail");//글쓴유저 이메일
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
+		
 		dao.writeQuestion(qid, qname, qcontent, qemail);
 		
 		return "redirect:event";
 	}
-
-//	@RequestMapping (value ="event")
-//	public String event ( Model model,Criteria cri) {
-//		IDao dao = sqlSession.getMapper(IDao.class);
-//		
-//		List<QBoardDto> qboardDtos = dao.questionList(cri);
-//		
-//		model.addAttribute("qdtos", qboardDtos);
-//		
-//		return "questionList";
-//	}
 	
 	@RequestMapping(value = "event")
 	public String list( Model model, Criteria cri,HttpServletRequest request) {//페이징해야하므로 Criteria 가져온다
@@ -180,41 +342,53 @@ public class MainController {
 		
 		PageDto pageDto = new PageDto(cri, totalRecord); 
 
-		List<QBoardDto> qboardDtos = dao.questionList(cri);
+		List<EventBDto> qboardDtos = dao.questionList(cri);
 		
 		model.addAttribute("pageMaker", pageDto);//pageMaker = pageDto
 		model.addAttribute("qdtos", qboardDtos );
 		model.addAttribute("currPage", pageNumInt );
 		
-		return "questionList";
+		return "event/questionList";
 	}
 	
 	
-	@RequestMapping(value = "/questionView")
+	
+	@RequestMapping(value = "questionView")
 	public String questionView(HttpServletRequest request, Model model) {
 		
 		String qnum = request.getParameter("qnum");
 		
 		IDao dao = sqlSession.getMapper(IDao.class);
 		
-		QBoardDto qBoardDto = dao.questionView(qnum);
+		EventBDto qBoardDto = dao.questionView(qnum);
 		
 		model.addAttribute("qdto", qBoardDto);
 		model.addAttribute("qid", qBoardDto.getQid());
 		
-		return "questionView";
+		return "event/questionView";
 	}
 	
 	@RequestMapping(value = "questionModify")
-	public String questionModify(HttpServletRequest request, Model model) {
+	public String questionModify(HttpServletRequest request, Model model,HttpSession session) {
+		
+//        String sessionId = (String) session.getAttribute("memberId");
+//		
+//		if(sessionId == null) {//로그인 상태 확인
+//			model.addAttribute("memberId", "ADMIN");
+//		} else {
+//			model.addAttribute("memberId", sessionId);
+//		}
+//		
+//		model.addAttribute("memberId", sessionId);
+//	
 		
 		String qnum = request.getParameter("qnum");
 		IDao dao = sqlSession.getMapper(IDao.class);
 		
-		QBoardDto qBoardDto = dao.questionView(qnum);
+		EventBDto qBoardDto = dao.questionView(qnum);
 		
 		model.addAttribute("qdto", qBoardDto);
-		return "questionModify";
+		return "event/questionModify";
 	}
 
 	
@@ -246,172 +420,19 @@ public class MainController {
 		return "redirect:event";
 	}
 	
-	@RequestMapping(value = "/mypage")
-	public String memberModify(Model model, HttpSession session) {
-		
-		String sessionId = (String) session.getAttribute("memberId");
-		
-		IDao dao = sqlSession.getMapper(IDao.class);
-		
-		MemberDto memberDto = dao.getMemberInfo(sessionId);
-		
-		model.addAttribute("memberDto", memberDto);
-		
-		return "memberModify";
-	}
-	
-	@RequestMapping(value = "/memberModifyOk")
-	public String memberModifyOk(HttpServletRequest request,  Model model) {
-		
-		String mid = request.getParameter("mid");
-		String mpw = request.getParameter("mpw");
-		String mname = request.getParameter("mname");
-		String memail = request.getParameter("memail");
-		
-		IDao dao = sqlSession.getMapper(IDao.class);
-		
-		dao.memberModify(mid, mpw, mname, memail);
-		
-		MemberDto memberDto = dao.getMemberInfo(mid);//수정된 회원정보 다시 가져오기
-		
-		model.addAttribute("memberDto", memberDto);
-		
-		return "memberModifyOk";
-	}
+	//////////////////////////////이벤트게시판영역///////////////////////////////////
 
-	
-	@RequestMapping(value = "/store")
-	public String store() {
+    //////////////////////////////고객센터///////////////////////////////////
+	@RequestMapping(value = "support")
+	public String support(HttpServletRequest request, Model model) {
 		
-		return "store";
+	
+	
+		
+		return "customer/support";
 	}
-	
-	@RequestMapping(value = "/cart")
-	public String cart() {
-		
-		return "cart";
-	}
-	@RequestMapping(value = "/MainStore")
-	public String MainStore() {
-		
-		return "MainStore";
-	}
+   //////////////////////////////고객센터///////////////////////////////////
 	
 	
-	@RequestMapping(value = "test")
-	public String test(Model model, HttpServletResponse response) throws IOException {
-			
-		IDao dao = sqlSession.getMapper(IDao.class);		
-		
-		BuyDto buyDto = dao.joinTest("tiger");
-		
-		
-		System.out.println(buyDto.getMemberDto().getMid());
-		
-		model.addAttribute("buyInfo", buyDto);
-		
-		//특정 페이지로 이동전에 자바스크립트 경고창 띄우기
-//		response.setContentType("text/html; charset=UTF-8");
-//        PrintWriter out = response.getWriter();
-//        out.println("<script>alert('로그인 정보를 확인해주세요.'); history.go(-1);</script>");
-//        out.flush(); 
-		
-		return "test";
-	}
 	
-//	@RequestMapping(value = "/mypage")
-//	public String memberModify(Model model, HttpSession session) {
-//		
-//		String sessionId = (String) session.getAttribute("memberId");
-//		
-//		IDao dao = sqlSession.getMapper(IDao.class);
-//		
-//		MemberDto memberDto = dao.getMemberInfo(sessionId);
-//		
-//		model.addAttribute("memberDto", memberDto);
-//		
-//		return "memberModify";
-//	}
-
-	@RequestMapping (value ="comment")
-	public String comment() {
-		
-		
-		return "comment";
-	}
-	
-
-	@RequestMapping (value ="comment2")
-	public String comment2(HttpServletRequest request, Model model) {
-		
-		String rid = request.getParameter("rid");
-		String rcontent = request.getParameter("rcontent");
-		
-		IDao dao = sqlSession.getMapper(IDao.class);
-		
-		dao.writeComment(rid, rcontent);
-		return "comment2";
-	}
-	
-	@RequestMapping (value ="Han")
-	public String Han() {
-		
-		return "Han";
-	}
-	
-	@RequestMapping (value ="Han2")
-	public String Han2(HttpServletRequest request, Model model) {
-		
-		String rating = request.getParameter("rating");
-		String rid = request.getParameter("rid");
-		String rcontent = request.getParameter("rcontent");
-		
-		IDao dao = sqlSession.getMapper(IDao.class);
-		
-		dao.writeMent(rating,rid,rcontent);
-		
-		return "Han2";
-	}
-	
-//	@RequestMapping (value ="Han3")
-//	public String Han3(Model model) {
-//		
-//		IDao dao = sqlSession.getMapper(IDao.class);
-//		
-//		Ment2 ment2 = dao.getReview("1");
-//		model.addAttribute("ment2", ment2);
-//		model.addAttribute("rating",Integer.parseInt(ment2.getRating()));
-//		
-//		return "Han3";
-//	}
-	
-	
-	@RequestMapping (value ="review")
-	public String review() {
-		
-		return "review";
-	}
-	
-//	@RequestMapping (value ="review2")
-//	public String review2(HttpServletRequest request, Model model) {
-//		
-//		String rating = request.getParameter("rating");
-//		String rid = request.getParameter("rid");
-//		String rcontent = request.getParameter("rcontent");
-//		
-//		IDao dao = sqlSession.getMapper(IDao.class);
-//		
-//		dao.writeMent(rating,rid,rcontent);
-//		
-//		return "review2";
-//	}
-	
-//	@RequestMapping (value ="review3")
-//	public String Han3(Model model) {
-//		
-//	
-//		
-//		return "review3";
-//	}
-
 }

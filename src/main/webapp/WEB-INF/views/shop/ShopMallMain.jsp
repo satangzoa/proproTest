@@ -1,32 +1,34 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>  
 <%
-String[] img ={"j1.jpg", "apple2.jpg", "apple3.jpg", "banana1.jpg", "banana2.jpg", "banana3.jpg", "pear1.jpg", "pear2.jpg", "pear3.jpg"};
-String[] name = {"사과1", "사과2", "사과3", "바나나1", "바나나2", "바나나3", "배1", "배2", "배3"};
+String[] img ={"j1.png", "j2.png", "j3.png", "j4.png", "j5.png", "j6.png", "j7.png", "j8.png", "j9.png"};
+String[] name = {"베게짱구", "하품짱구", "흰둥이랑짱구", "걷는짱구", "멍멍이짱구", "꿀벌짱구", "다람쥐짱구", "고양이짱구", "토끼짱구"};
 String[] price = {"1,500", "1,600", "1,700", "3,000", "3,500", "4,000", "5,000", "6,000", "7,000"};
 %>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>ShopMallMain JSP</title>
+<title>이것저것  판매</title>
 <script type="text/javascript">
 function fnCart(name, price) {
 	//alert("Name : " + name + "\nPrice : " + price);
 	if(confirm("장바구니에 담으시겠습니까?")) {
-		location.href = "CartProcess.jsp?name=" + name + "&price=" + price;
+		location.href = "CartProcess?name=" + name + "&price=" + price;
 	}
 }
 
 function fnView() {
 	if(confirm("장바구니를 보시겠습니까?")){
-		location.href = "CartView.jsp";
+		location.href = "CartView";
 	}
 }
 </script>
 </head>
 <body>
 <div align="center">
-	<h3>[맛있는 과일 가게]</h3>
+	<h3>[귀여운 짱구 가게]</h3>
 	<table border="1">
 		<tr align="right">
 			<td colspan="3">
